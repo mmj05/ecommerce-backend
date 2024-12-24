@@ -4,36 +4,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "category")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
-
-    private Long categoryId;
-    private String categoryName;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getCategoryId() {
-        return categoryId;
-    }
+    private Long categoryId;
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public Category(String categoryName, Long categoryId) {
-        this.categoryName = categoryName;
-        this.categoryId = categoryId;
-    }
-
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
+    private String categoryName;
 
 
 }
