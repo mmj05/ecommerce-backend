@@ -1,14 +1,15 @@
 package com.ecommerce.sb_ecom.service;
 
-import com.ecommerce.sb_ecom.model.Category;
-
-import java.util.List;
+import com.ecommerce.sb_ecom.payload.CategoryDTO;
+import com.ecommerce.sb_ecom.payload.CategoryResponse;
 
 public interface CategoryService {
-    List<Category> getAllCategories();
-    void createCategory(Category category);
 
-    String deleteCategory(Long categoryId);
+    CategoryResponse getAllCategories();
 
-    Category updateCategory(Category category, Long categoryId);
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
+
+    CategoryDTO deleteCategory(Long categoryId);
+
+    CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId);
 }
