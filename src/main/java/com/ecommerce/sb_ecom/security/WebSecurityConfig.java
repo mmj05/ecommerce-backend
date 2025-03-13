@@ -124,7 +124,7 @@ public class WebSecurityConfig {
                     });
 
             Set<Role> userRoles = Set.of(userRole);
-            Set<Role> sellerRoles = Set.of(sellerRole);
+            Set<Role> sellerRoles = Set.of(sellerRole, userRole);
             Set<Role> adminRoles = Set.of(userRole, sellerRole, adminRole);
 
 
