@@ -3,3 +3,22 @@
 
 # Maven or build directory
 target/
+
+# Environment files - NEVER commit these to version control
+.env
+.env.local
+.env.development
+.env.production
+*.env
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
+
+# Application-specific properties with secrets
+application-dev.properties
+application-prod.properties
