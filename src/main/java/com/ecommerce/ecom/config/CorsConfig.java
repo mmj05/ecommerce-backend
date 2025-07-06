@@ -18,6 +18,9 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:3000");  // React's default port
         config.addAllowedOrigin("http://127.0.0.1:5173");  // Alternative localhost
         config.addAllowedOrigin("http://127.0.0.1:3000");  // Alternative localhost
+        config.addAllowedOrigin("https://flipdot.onrender.com");  // Alternative localhost
+        // Add the actual frontend domain that's making the requests
+
 
         // Allow all HTTP methods
         config.addAllowedMethod("*");
