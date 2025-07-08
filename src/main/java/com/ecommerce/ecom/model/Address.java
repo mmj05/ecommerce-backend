@@ -16,7 +16,12 @@ import lombok.ToString;
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "address_id_seq",
+            sequenceName = "address_id_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_id_seq")
     private Long addressId;
 
     @NotBlank
