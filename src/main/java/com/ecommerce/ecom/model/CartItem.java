@@ -13,7 +13,12 @@ import lombok.NoArgsConstructor;
 public class CartItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "cart_item_id_seq",
+            sequenceName = "cart_item_id_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_item_id_seq")
     private Long cartItemId;
 
     @ManyToOne

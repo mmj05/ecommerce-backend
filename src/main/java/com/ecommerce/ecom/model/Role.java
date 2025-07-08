@@ -13,7 +13,12 @@ import lombok.ToString;
 @Table(name = "roles")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "role_id_seq",
+            sequenceName = "role_id_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_seq")
     @Column(name = "role_id")
     private Integer roleId;
 
