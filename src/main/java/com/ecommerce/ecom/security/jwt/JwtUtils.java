@@ -52,11 +52,12 @@ public class JwtUtils {
                 .path("/")  // Changed from "/api" to "/" to cover all paths
                 .maxAge(expirationMs / 1000) // Convert from ms to seconds
                 .httpOnly(true)
-                .secure(true)  // Changed to true for HTTPS deployment
-                .sameSite("None")  // Changed from "Lax" to "None" for cross-origin support
+                // Use secure cookies in production (HTTPS). For local development over HTTP, use false.
+                .secure(false)
+                .sameSite("Lax")  // Changed to "Lax" for local development without Secure
                 .build();
 
-        logger.info("Generated JWT cookie: name={}, path=/, secure=true, sameSite=None, maxAge={} seconds",
+        logger.info("Generated JWT cookie: name={}, path=/, secure=false, sameSite=Lax, maxAge={} seconds",
                 jwtCookie, expirationMs / 1000);
         return cookie;
     }
@@ -66,8 +67,9 @@ public class JwtUtils {
                 .path("/")  // Changed from "/api" to "/"
                 .maxAge(0)  // Explicitly set maxAge to 0 for immediate expiration
                 .httpOnly(true)
-                .secure(true)  // Match the generation settings
-                .sameSite("None")
+                // Match generation settings above (false for local development)
+                .secure(false)
+                .sameSite("Lax")
                 .build();
         return cookie;
     }
