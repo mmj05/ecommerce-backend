@@ -1,0 +1,40 @@
+# Maven
+target/
+!target/*.jar
+*.jar
+*.war
+*.ear
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Application specific
+{project.image}/ 
