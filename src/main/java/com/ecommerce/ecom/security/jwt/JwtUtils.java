@@ -31,6 +31,9 @@ public class JwtUtils {
     @Value("${spring.ecom.app.jwtCookieName}")
     private String jwtCookie;
 
+    @Value("${spring.ecom.app.jwtCookieSecure}")
+    private boolean jwtCookieSecure;
+
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
         if (cookie != null) {
@@ -52,13 +55,13 @@ public class JwtUtils {
                 .path("/")  // Changed from "/api" to "/" to cover all paths
                 .maxAge(expirationMs / 1000) // Convert from ms to seconds
                 .httpOnly(true)
-                // Use secure cookies in production (HTTPS). For local development over HTTP, use false.
-                .secure(false)
-                .sameSite("None")  // Changed to "None" for cross-origin requests
+                // Use environment-based secure setting: true for production (HTTPS), false for local development
+                .secure(jwtCookieSecure)
+                .sameSite("None")  // Required for cross-origin requests
                 .build();
 
-        logger.info("Generated JWT cookie: name={}, path=/, secure=false, sameSite=Lax, maxAge={} seconds",
-                jwtCookie, expirationMs / 1000);
+        logger.info("Generated JWT cookie: name={}, path=/, secure={}, sameSite=None, maxAge={} seconds",
+                jwtCookie, jwtCookieSecure, expirationMs / 1000);
         return cookie;
     }
 
@@ -67,8 +70,8 @@ public class JwtUtils {
                 .path("/")  // Changed from "/api" to "/"
                 .maxAge(0)  // Explicitly set maxAge to 0 for immediate expiration
                 .httpOnly(true)
-                // Match generation settings above (false for local development)
-                .secure(false)
+                // Match generation settings above
+                .secure(jwtCookieSecure)
                 .sameSite("None")
                 .build();
         return cookie;
