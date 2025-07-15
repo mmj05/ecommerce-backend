@@ -54,7 +54,7 @@ public class JwtUtils {
                 .httpOnly(true)
                 // Use secure cookies in production (HTTPS). For local development over HTTP, use false.
                 .secure(false)
-                .sameSite("Lax")  // Changed to "Lax" for local development without Secure
+                .sameSite("None")  // Changed to "None" for cross-origin requests
                 .build();
 
         logger.info("Generated JWT cookie: name={}, path=/, secure=false, sameSite=Lax, maxAge={} seconds",
@@ -69,7 +69,7 @@ public class JwtUtils {
                 .httpOnly(true)
                 // Match generation settings above (false for local development)
                 .secure(false)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
         return cookie;
     }
