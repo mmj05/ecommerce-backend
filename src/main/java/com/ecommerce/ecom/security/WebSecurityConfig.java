@@ -73,7 +73,7 @@ public class WebSecurityConfig {
                     configuration.setAllowCredentials(true);
                     configuration.setMaxAge(3600L);
                     // Expose headers that might be needed by the frontend
-                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
+                    configuration.setExposedHeaders(Arrays.asList("Authorization"));
                     return configuration;
                 }))
                 .csrf(csrf -> csrf.disable())

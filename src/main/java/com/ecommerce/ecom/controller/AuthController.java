@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -68,28 +67,28 @@ public class AuthController {
             // Get user details
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            // Generate JWT cookie with appropriate expiration
+            // Generate JWT token with appropriate expiration
             long tokenExpiration = loginRequest.getRememberMe() != null && loginRequest.getRememberMe() ?
                     jwtExpirationMsExtended : jwtExpirationMs;
-            ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails, tokenExpiration);
+            String jwtToken = jwtUtils.generateToken(userDetails, tokenExpiration);
 
             // Get user roles
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority())
                     .collect(Collectors.toList());
 
-            // Create enhanced response
+            // Create enhanced response with JWT token
             UserInfoResponse response = new UserInfoResponse(
                     userDetails.getId(),
                     userDetails.getUsername(),
-                    roles
+                    roles,
+                    jwtToken
             );
 
             // Include the user's email in the response so the frontend can display it
             response.setEmail(userDetails.getEmail());
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                     .body(response);
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -185,9 +184,9 @@ public class AuthController {
 
     @PostMapping("/signout")
     public ResponseEntity<?> signoutUser(){
-        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,
-                        cookie.toString())
+        // For header-based JWT, logout just returns a success message
+        // The client should remove the token from storage
+        return ResponseEntity.ok()
                 .body(new MessageResponse("You've been signed out!"));
     }
 }

@@ -28,14 +28,13 @@ public class CorsConfig {
         // Allow all headers (including custom headers)
         config.addAllowedHeader("*");
 
-        // CRITICAL: Allow credentials (cookies, authorization headers, etc.)
+        // CRITICAL: Allow credentials (authorization headers, etc.)
         config.setAllowCredentials(true);
 
         // Set max age for preflight cache
         config.setMaxAge(3600L);
 
         // Allow specific headers in responses
-        config.addExposedHeader("Set-Cookie");
         config.addExposedHeader("Authorization");
 
         source.registerCorsConfiguration("/**", config);
