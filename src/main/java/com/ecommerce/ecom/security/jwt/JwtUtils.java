@@ -4,14 +4,12 @@ import com.ecommerce.ecom.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
+import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.util.Date;
 
@@ -28,53 +26,24 @@ public class JwtUtils {
     @Value("${spring.app.jwtExpirationMsExtended}")
     private long jwtExpirationMsExtended;
 
-    @Value("${spring.ecom.app.jwtCookieName}")
-    private String jwtCookie;
-
-    @Value("${spring.ecom.app.jwtCookieSecure}")
-    private boolean jwtCookieSecure;
-
-    public String getJwtFromCookies(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-        if (cookie != null) {
-            logger.debug("Found JWT cookie: {}", cookie.getValue());
-            return cookie.getValue();
+    public String getJwtFromAuthorizationHeader(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            String jwt = headerAuth.substring(7);
+            logger.debug("Found JWT in Authorization header");
+            return jwt;
         } else {
-            logger.debug("No JWT cookie found");
+            logger.debug("No JWT found in Authorization header");
             return null;
         }
     }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
-        return generateJwtCookie(userPrincipal, jwtExpirationMs);
+    public String generateJwtToken(UserDetailsImpl userPrincipal) {
+        return generateTokenFromUsername(userPrincipal.getUsername(), jwtExpirationMs);
     }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal, long expirationMs) {
-        String jwt = generateTokenFromUsername(userPrincipal.getUsername(), expirationMs);
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
-                .path("/")  // Changed from "/api" to "/" to cover all paths
-                .maxAge(expirationMs / 1000) // Convert from ms to seconds
-                .httpOnly(true)
-                // Use environment-based secure setting: true for production (HTTPS), false for local development
-                .secure(jwtCookieSecure)
-                .sameSite("None")  // Required for cross-origin requests
-                .build();
-
-        logger.info("Generated JWT cookie: name={}, path=/, secure={}, sameSite=None, maxAge={} seconds",
-                jwtCookie, jwtCookieSecure, expirationMs / 1000);
-        return cookie;
-    }
-
-    public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
-                .path("/")  // Changed from "/api" to "/"
-                .maxAge(0)  // Explicitly set maxAge to 0 for immediate expiration
-                .httpOnly(true)
-                // Match generation settings above
-                .secure(jwtCookieSecure)
-                .sameSite("None")
-                .build();
-        return cookie;
+    public String generateJwtToken(UserDetailsImpl userPrincipal, long expirationMs) {
+        return generateTokenFromUsername(userPrincipal.getUsername(), expirationMs);
     }
 
     public String generateTokenFromUsername(String username) {
