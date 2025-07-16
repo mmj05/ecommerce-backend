@@ -18,24 +18,21 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:3000");  // React's default port
         config.addAllowedOrigin("http://127.0.0.1:5173");  // Alternative localhost
         config.addAllowedOrigin("http://127.0.0.1:3000");  // Alternative localhost
-        config.addAllowedOrigin("https://flipdot.onrender.com");  // Alternative localhost
-        // Add the actual frontend domain that's making the requests
-
+        config.addAllowedOrigin("https://flipdot.onrender.com");  // Production domain
 
         // Allow all HTTP methods
         config.addAllowedMethod("*");
 
-        // Allow all headers (including custom headers)
+        // Allow all headers (including custom headers like Authorization)
         config.addAllowedHeader("*");
 
-        // CRITICAL: Allow credentials (cookies, authorization headers, etc.)
-        config.setAllowCredentials(true);
+        // No longer needed for header-based auth
+        config.setAllowCredentials(false);
 
         // Set max age for preflight cache
         config.setMaxAge(3600L);
 
-        // Allow specific headers in responses
-        config.addExposedHeader("Set-Cookie");
+        // Allow Authorization header in responses
         config.addExposedHeader("Authorization");
 
         source.registerCorsConfiguration("/**", config);
