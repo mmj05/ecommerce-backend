@@ -70,10 +70,11 @@ public class WebSecurityConfig {
                     ));
                     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
                     configuration.setAllowedHeaders(Arrays.asList("*"));
-                    configuration.setAllowCredentials(true);
+                    // No longer needed for header-based auth, but keeping for other potential uses
+                    configuration.setAllowCredentials(false);
                     configuration.setMaxAge(3600L);
-                    // Expose headers that might be needed by the frontend
-                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
+                    // Expose Authorization header for frontend
+                    configuration.setExposedHeaders(Arrays.asList("Authorization"));
                     return configuration;
                 }))
                 .csrf(csrf -> csrf.disable())
